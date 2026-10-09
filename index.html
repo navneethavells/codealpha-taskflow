@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskFlow | CodeAlpha Frontend Project</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="TaskFlow overview">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">TF</span>
+        <div>
+          <p>CodeAlpha</p>
+          <h1>TaskFlow</h1>
+        </div>
+      </div>
+
+      <img class="sidebar-visual" src="assets/taskflow-preview.svg" alt="TaskFlow dashboard preview">
+
+      <div class="focus-card">
+        <span class="eyebrow">Today</span>
+        <strong id="focusTitle">Plan your next move</strong>
+        <p id="focusCopy">Add a task, update progress, and keep your frontend workflow organized.</p>
+      </div>
+
+      <nav class="side-nav" aria-label="Dashboard sections">
+        <a href="#dashboard" class="active">Dashboard</a>
+        <a href="#new-task">New Task</a>
+        <a href="#board">Board</a>
+      </nav>
+    </aside>
+
+    <main class="workspace" id="dashboard">
+      <header class="topbar">
+        <div>
+          <span class="eyebrow">Frontend Development Project</span>
+          <h2>Interactive Task Manager</h2>
+        </div>
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">
+          <span aria-hidden="true">◐</span>
+          <span>Theme</span>
+        </button>
+      </header>
+
+      <section class="stats-grid" aria-label="Project statistics">
+        <article class="stat-card">
+          <span>Total Tasks</span>
+          <strong id="totalTasks">0</strong>
+          <p>All saved items</p>
+        </article>
+        <article class="stat-card">
+          <span>In Progress</span>
+          <strong id="activeTasks">0</strong>
+          <p>Currently moving</p>
+        </article>
+        <article class="stat-card">
+          <span>Completed</span>
+          <strong id="doneTasks">0</strong>
+          <p>Finished work</p>
+        </article>
+        <article class="stat-card accent">
+          <span>Completion</span>
+          <strong id="completionRate">0%</strong>
+          <div class="progress-track" aria-hidden="true">
+            <span id="completionBar"></span>
+          </div>
+        </article>
+      </section>
+
+      <section class="control-grid">
+        <form class="task-form" id="taskForm" aria-labelledby="newTaskTitle">
+          <div class="section-heading">
+            <span class="eyebrow" id="new-task">Quick Add</span>
+            <h3 id="newTaskTitle">Create a task</h3>
+          </div>
+
+          <label>
+            Task title
+            <input id="taskTitle" type="text" placeholder="Build responsive navigation" autocomplete="off" required>
+          </label>
+
+          <div class="form-row">
+            <label>
+              Category
+              <select id="taskCategory">
+                <option>Design</option>
+                <option>Development</option>
+                <option>Testing</option>
+                <option>Documentation</option>
+              </select>
+            </label>
+
+            <label>
+              Priority
+              <select id="taskPriority">
+                <option>High</option>
+                <option>Medium</option>
+                <option>Low</option>
+              </select>
+            </label>
+          </div>
+
+          <label>
+            Due date
+            <input id="taskDueDate" type="date" required>
+          </label>
+
+          <button class="primary-action" type="submit">Add Task</button>
+        </form>
+
+        <section class="insights" aria-labelledby="insightsTitle">
+          <div class="section-heading">
+            <span class="eyebrow">Insights</span>
+            <h3 id="insightsTitle">Workload by category</h3>
+          </div>
+          <div class="chart-list" id="categoryChart" aria-live="polite"></div>
+        </section>
+      </section>
+
+      <section class="toolbar" aria-label="Task filters">
+        <label class="search-box">
+          <span>Search</span>
+          <input id="searchInput" type="search" placeholder="Search tasks">
+        </label>
+
+        <label>
+          Category
+          <select id="filterCategory">
+            <option value="all">All categories</option>
+            <option>Design</option>
+            <option>Development</option>
+            <option>Testing</option>
+            <option>Documentation</option>
+          </select>
+        </label>
+
+        <label>
+          Priority
+          <select id="filterPriority">
+            <option value="all">All priorities</option>
+            <option>High</option>
+            <option>Medium</option>
+            <option>Low</option>
+          </select>
+        </label>
+
+        <button class="ghost-action" id="resetData" type="button">Reset Demo</button>
+        <button class="ghost-action danger" id="clearDone" type="button">Clear Done</button>
+      </section>
+
+      <section class="board" id="board" aria-label="Task board">
+        <article class="task-column" data-status="todo">
+          <header>
+            <h3>To Do</h3>
+            <span id="todoCount">0</span>
+          </header>
+          <div class="task-list" id="todoList"></div>
+        </article>
+
+        <article class="task-column" data-status="progress">
+          <header>
+            <h3>In Progress</h3>
+            <span id="progressCount">0</span>
+          </header>
+          <div class="task-list" id="progressList"></div>
+        </article>
+
+        <article class="task-column" data-status="done">
+          <header>
+            <h3>Done</h3>
+            <span id="doneCount">0</span>
+          </header>
+          <div class="task-list" id="doneList"></div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <template id="taskTemplate">
+    <article class="task-card">
+      <div class="task-card-header">
+        <span class="priority-pill"></span>
+        <button class="icon-button delete-task" type="button" aria-label="Delete task">×</button>
+      </div>
+      <h4></h4>
+      <p class="task-meta"></p>
+      <div class="task-actions">
+        <button class="ghost-action move-left" type="button">Back</button>
+        <button class="ghost-action move-right" type="button">Next</button>
+      </div>
+    </article>
+  </template>
+
+  <script src="script.js"></script>
+</body>
+</html>
